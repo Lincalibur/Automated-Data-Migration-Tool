@@ -20,5 +20,5 @@ jobs:
 
       - name: Display file structure
         run: |
-          echo "Current file structure:"
-          find .
+          echo "Current file structure (excluding node_modules):"
+          find . -path "./node_modules" -prune -o -print
