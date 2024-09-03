@@ -1,7 +1,7 @@
 # src/convertibles.py
 
 from converters.pdf_to_word import pdf_to_word_converter
-from converters.sql_to_excel import sql_to_excel_converter
+# from converters.sql_to_excel import sql_to_excel_converter
 # Import other conversion functions as needed
 
 CONVERTIBLES = {
@@ -13,7 +13,7 @@ CONVERTIBLES = {
     'sql_to_excel': {
         'source_type': 'sql',
         'destination_type': 'excel',
-        'converter': sql_to_excel_converter
+        # 'converter': sql_to_excel_converter
     },
     # Add more predefined convertibles here
 }

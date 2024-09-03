@@ -11,6 +11,10 @@ The Automated Data Migration Tool (ADMT) is designed to simplify and automate th
 - **User Interface**: A dashboard for configuring migrations, mapping fields, scheduling tasks, and monitoring progress.
 - **Scalability**: Designed to handle migrations of varying sizes and complexities.
 
+## Disclaimer
+
+**Disclaimer**: This project is currently under development. The code and features are in a preliminary state and may not be fully functional or stable. There is no guarantee that the code will work as expected in all scenarios. The project is provided as-is and may undergo significant changes as development progresses. Use at your own risk, and be sure to thoroughly test the tool in your environment before relying on it for critical tasks.
+
 ## Getting Started
 
 ### Prerequisites
