@@ -1,28 +1,80 @@
-# Automated-Data-Migration-Tool
-ADMT migrates Preset Data sources to Databases and extract into reports.
-### 3. **Automated Data Migration Tool**
-#### **Step 1: Define Requirements**
-   - **Supported Data Sources**: Determine which databases, file formats, and cloud platforms the tool will support.
-   - **User Scenarios**: Identify common migration scenarios and challenges to address.
+# Automated Data Migration Tool (ADMT)
 
-#### **Step 2: Develop the Core Features**
-   - **Migration Scripts**: Write scripts to automate data extraction, transformation, and loading (ETL) between systems.
-   - **Mapping Tool**: Create a feature for users to map data fields between source and destination systems.
-   - **Error Handling**: Develop robust error handling and logging to assist with troubleshooting.
+The Automated Data Migration Tool (ADMT) is designed to simplify and automate the process of migrating data from various sources to different databases, with support for multiple file formats and cloud platforms. The tool includes a user-friendly interface for configuring migration settings, mapping data fields, scheduling migrations, and monitoring progress.
 
-#### **Step 3: Build the User Interface**
-   - **Migration Configuration**: Create a UI for users to configure migration settings, map fields, and schedule migrations.
-   - **Progress Monitoring**: Develop a dashboard for monitoring migration progress and viewing logs.
+## Features
 
-#### **Step 4: Testing and Iteration**
-   - **Pilot Projects**: Partner with a company undergoing a migration to test the tool in a real-world scenario.
-   - **Feedback Loop**: Continuously gather feedback to improve the tool’s reliability and ease of use.
+- **Support for Various Data Sources**: Integrates with multiple databases, file formats, and cloud platforms.
+- **ETL Automation**: Automates Extraction, Transformation, and Loading (ETL) processes to streamline data migration.
+- **Mapping Tool**: Allows users to map data fields between source and destination systems easily.
+- **Error Handling**: Robust error handling and logging to facilitate troubleshooting.
+- **User Interface**: A dashboard for configuring migrations, mapping fields, scheduling tasks, and monitoring progress.
+- **Scalability**: Designed to handle migrations of varying sizes and complexities.
 
-#### **Step 5: Commercialization**
-   - **Licensing**: Offer the tool as a licensed product with different pricing based on the complexity and scale of migrations.
-   - **Consulting Services**: Consider offering consulting services to help companies plan and execute migrations using the tool.
+## Getting Started
 
-### General Tips for Development:
-- **Version Control**: Use GitHub or GitLab for version control and collaboration.
-- **Documentation**: Provide thorough documentation and user guides for each application.
-- **Support and Maintenance**: Offer ongoing support and updates to keep the applications current and functional.
+### Prerequisites
+
+- Python 3.8 or higher
+- [List other dependencies, e.g., database drivers, cloud SDKs]
+
+### Installation
+
+1. Clone the repository:
+
+    ```bash
+    git clone https://github.com/lincalibur/Automated-Data-Migration-Tool.git
+    ```
+
+2. Navigate to the project directory:
+
+    ```bash
+    cd Automated-Data-Migration-Tool
+    ```
+
+3. Install the required dependencies:
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+### Configuration
+
+- Configure your data sources and settings in the `config/config.yaml` file. Provide necessary details such as database connection strings, file paths, and cloud credentials.
+
+### Running the Tool
+
+- Run the main script to start the tool:
+
+    ```bash
+    python src/main.py
+    ```
+
+### Usage
+
+1. **Configure Data Sources**: Set up your source and destination data connections in the configuration file.
+2. **Map Data Fields**: Use the mapping tool to align source and destination data fields.
+3. **Schedule Migrations**: Define migration schedules to automate the process.
+4. **Monitor Progress**: Use the dashboard to track the status of migrations and view logs.
+
+## Development
+
+### File Structure
+
+```plaintext
+Automated-Data-Migration-Tool/
+│
+├── docs/                        # Documentation
+├── src/                         # Source code
+│   ├── config/                  # Configuration files
+│   ├── data_sources/            # Data source connectors
+│   ├── etl/                     # ETL scripts
+│   ├── mapping/                 # Data mapping tool
+│   ├── ui/                      # User interface
+│   ├── error_handling/          # Error handling and logging
+│   └── utils/                   # Utility functions
+├── tests/                       # Unit tests
+├── .gitignore                   # Git ignore rules
+├── LICENSE                      # License file
+├── README.md                    # Project overview
+└── setup.py                     # Setup script
