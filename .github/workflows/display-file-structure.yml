@@ -1,0 +1,24 @@
+name: Display File Structure
+
+on:
+  push:
+    branches:
+      - main
+      - '**'
+  pull_request:
+    branches:
+      - main
+      - '**'
+
+jobs:
+  display-file-structure:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Display file structure
+        run: |
+          echo "Current file structure:"
+          find .
