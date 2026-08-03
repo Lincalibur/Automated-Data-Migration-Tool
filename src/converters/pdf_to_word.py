@@ -1,5 +1,5 @@
 from docx import Document
-from PyPDF2 import PdfReader
+from pypdf import PdfReader
 
 def pdf_to_word_converter(pdf_file_path, word_file_path):
     pdf_reader = PdfReader(pdf_file_path)

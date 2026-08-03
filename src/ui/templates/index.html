@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Automated Data Migration Tool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main>
+        <h1>Automated Data Migration Tool</h1>
+        <p class="subtitle">Drag a file in, pick a conversion, get the result.</p>
+
+        <div id="dropzone" class="dropzone">
+            Drag &amp; drop a file here, or click to choose one
+            <input type="file" id="file-input" hidden>
+        </div>
+
+        <div id="uploaded-info" class="uploaded-info" hidden>
+            <p>Uploaded: <span id="uploaded-name"></span></p>
+            <label for="convert-to">Convert to:</label>
+            <select id="convert-to">
+                {% for name in conversions %}
+                <option value="{{ name }}">{{ name.replace('_', ' ') }}</option>
+                {% endfor %}
+            </select>
+            <button id="convert-btn">Convert</button>
+        </div>
+
+        <div id="result" class="result" hidden></div>
+    </main>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

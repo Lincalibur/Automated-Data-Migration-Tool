@@ -1,6 +1,7 @@
 Flask
-PyPDF2
+pypdf
 python-docx
 pandas
 openpyxl
 SQLAlchemy
+pytest

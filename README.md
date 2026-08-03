@@ -1,84 +1,114 @@
 # Automated Data Migration Tool (ADMT)
 
-The Automated Data Migration Tool (ADMT) is designed to simplify and automate the process of migrating data from various sources to different databases, with support for multiple file formats and cloud platforms. The tool includes a user-friendly interface for configuring migration settings, mapping data fields, scheduling migrations, and monitoring progress.
+A small Flask application for moving and converting tabular data between files
+and databases. It supports two workflows:
+
+- **One-off file conversion** — upload a file through the web UI and convert it
+  (PDF → Word, or a SQLite table → Excel).
+- **Generic ETL migration** — extract data from a file or database, optionally
+  remap/rename columns, and load it into a different file or database, via the
+  `/migrate` API.
 
 ## Features
 
-- **Support for Various Data Sources**: Integrates with multiple databases, file formats, and cloud platforms.
-- **ETL Automation**: Automates Extraction, Transformation, and Loading (ETL) processes to streamline data migration.
-- **Mapping Tool**: Allows users to map data fields between source and destination systems easily.
-- **Error Handling**: Robust error handling and logging to facilitate troubleshooting.
-- **User Interface**: A dashboard for configuring migrations, mapping fields, scheduling tasks, and monitoring progress.
-- **Scalability**: Designed to handle migrations of varying sizes and complexities.
-
-## Disclaimer
-
-**Disclaimer**: This project is currently under development. The code and features are in a preliminary state and may not be fully functional or stable. There is no guarantee that the code will work as expected in all scenarios. The project is provided as-is and may undergo significant changes as development progresses. Use at your own risk, and be sure to thoroughly test the tool in your environment before relying on it for critical tasks.
+- **Web UI**: drag-and-drop (or click-to-browse) file upload with in-browser
+  conversion, served directly by Flask — no separate frontend build required.
+- **File ⇄ database ETL pipeline**: `DataExtractor` → `DataTransformer` →
+  `DataLoader` classes that read/write CSV, Excel, JSON files and any
+  SQLAlchemy-supported database (SQLite by default, no server setup needed).
+- **Column mapping**: `FieldMapper` renames and selects columns between a
+  source and destination schema during migration.
+- **File converters**: PDF → Word (`pypdf` + `python-docx`), SQLite table →
+  Excel (`SQLAlchemy` + `pandas`/`openpyxl`).
+- **Tested**: `pytest` suite covering the converters, the ETL pipeline
+  (file→database and database→file), the field mapper, and the Flask routes.
 
 ## Getting Started
 
 ### Prerequisites
 
-- Python 3.8 or higher
-- [List other dependencies, e.g., database drivers, cloud SDKs]
+- Python 3.9+
 
 ### Installation
 
-1. Clone the repository:
+```bash
+git clone https://github.com/Lincalibur/Automated-Data-Migration-Tool.git
+cd Automated-Data-Migration-Tool
+python -m venv .venv
+.venv\Scripts\activate   # macOS/Linux: source .venv/bin/activate
+pip install -r requirements.txt
+```
 
-    ```bash
-    git clone https://github.com/lincalibur/Automated-Data-Migration-Tool.git
-    ```
+### Running the app
 
-2. Navigate to the project directory:
+```bash
+python src/main.py
+```
 
-    ```bash
-    cd Automated-Data-Migration-Tool
-    ```
+Then open `http://127.0.0.1:5000/` and drag in a `.pdf` (converts to `.docx`)
+or a SQLite `.db` file (exports its first table to `.xlsx`).
 
-3. Install the required dependencies:
+### Running the tests
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+```bash
+pytest tests/ -v
+```
 
-### Configuration
+## API
 
-- Configure your data sources and settings in the `config/config.yaml` file. Provide necessary details such as database connection strings, file paths, and cloud credentials.
+| Route        | Method | Purpose                                                       |
+|--------------|--------|----------------------------------------------------------------|
+| `/`          | GET    | Web UI                                                         |
+| `/upload`    | POST   | Upload a file (multipart form, field name `file`)               |
+| `/convert`   | POST   | Convert an uploaded file: `{"file_path": ..., "convert_to": "pdf_to_word" \| "sql_to_excel"}` |
+| `/migrate`   | POST   | Run an extract → transform → load pipeline (see below)         |
 
-### Running the Tool
+### `/migrate` example
 
-- Run the main script to start the tool:
+Move a CSV file into a SQLite table, renaming columns along the way:
 
-    ```bash
-    python src/main.py
-    ```
+```bash
+curl -X POST http://127.0.0.1:5000/migrate \
+  -H "Content-Type: application/json" \
+  -d '{
+        "source": {"type": "file", "path": "uploaded_files/customers.csv"},
+        "destination": {
+          "type": "database",
+          "connection_string": "sqlite:///output_files/warehouse.db",
+          "table": "customers"
+        },
+        "field_map": {"cust_name": "customer_name", "cust_email": "email"}
+      }'
+```
 
-### Usage
+`source`/`destination` each take `{"type": "file", "path": "..."}` or
+`{"type": "database", "connection_string": "...", "table": "..."}`. SQLite
+connection strings with a relative path are resolved relative to the
+directory the server was started from — use an absolute path if you're
+calling the API from somewhere else.
 
-1. **Configure Data Sources**: Set up your source and destination data connections in the configuration file.
-2. **Map Data Fields**: Use the mapping tool to align source and destination data fields.
-3. **Schedule Migrations**: Define migration schedules to automate the process.
-4. **Monitor Progress**: Use the dashboard to track the status of migrations and view logs.
+## Project structure
 
-## Development
-
-### File Structure
-
-```plaintext
+```
 Automated-Data-Migration-Tool/
-│
-├── docs/                        # Documentation
-├── src/                         # Source code
-│   ├── config/                  # Configuration files
-│   ├── data_sources/            # Data source connectors
-│   ├── etl/                     # ETL scripts
-│   ├── mapping/                 # Data mapping tool
-│   ├── ui/                      # User interface
-│   ├── error_handling/          # Error handling and logging
-│   └── utils/                   # Utility functions
-├── tests/                       # Unit tests
-├── .gitignore                   # Git ignore rules
-├── LICENSE                      # License file
-├── README.md                    # Project overview
-└── setup.py                     # Setup script
+├── docs/                     # API and usage notes
+├── src/
+│   ├── main.py                # Flask app: routes for upload/convert/migrate
+│   ├── convertibles.py         # Registry of supported one-off conversions
+│   ├── converters/             # pdf_to_word, sql_to_excel
+│   ├── data_sources/           # FileConnector, DatabaseConnector
+│   ├── etl/                    # DataExtractor, DataTransformer, DataLoader
+│   ├── mapping/                # FieldMapper
+│   └── ui/                     # templates/ + static/ for the web UI
+├── tests/                    # pytest suite
+├── requirements.txt
+└── setup.py
+```
+
+## Notes on scope
+
+This is a portfolio/learning project, not a production migration tool: there's
+no auth on the API, no background job queue for large migrations, and no
+cloud storage connectors (S3/GCS/etc.) — only local files and SQLAlchemy
+databases. Everything listed above is implemented and tested; nothing here is
+a stub.

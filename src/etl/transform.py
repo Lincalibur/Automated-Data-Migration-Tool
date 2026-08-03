@@ -1,19 +1,20 @@
 # src/etl/transform.py
+from mapping.mapper import FieldMapper
+
+
 class DataTransformer:
-    def __init__(self):
+    def __init__(self, field_map=None, drop_empty_rows=True):
         """
-        Initialize the data transformer.
+        :param field_map: optional dict of {source_column: destination_column}
+            applied via FieldMapper. Pass None to keep columns as-is.
+        :param drop_empty_rows: if True, drop rows that are entirely NaN.
         """
-        pass
+        self.mapper = FieldMapper(field_map)
+        self.drop_empty_rows = drop_empty_rows
 
     def transform(self, data):
-        """
-        Transform the data based on predefined rules.
-        
-        :param data: Data to be transformed.
-        :return: Transformed data.
-        """
-        # Placeholder for transformation logic
-        print("Transforming data...")
-        transformed_data = data  # Replace with actual transformation logic
-        return transformed_data
+        """Apply column mapping and basic cleanup rules to a DataFrame."""
+        transformed = self.mapper.apply(data)
+        if self.drop_empty_rows:
+            transformed = transformed.dropna(how='all')
+        return transformed.reset_index(drop=True)

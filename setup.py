@@ -6,22 +6,21 @@ setup(
     packages=find_packages(where='src'),
     package_dir={'': 'src'},
     install_requires=[
+        'flask',
+        'pypdf',
+        'python-docx',
         'pandas',
         'openpyxl',
-        'pyyaml',
         'sqlalchemy',
-        # Additional dependencies
     ],
     extras_require={
         'dev': [
             'pytest',
-            'sphinx',
-            # Additional development dependencies
         ],
     },
     entry_points={
         'console_scripts': [
-            'admt=src.main:main',  # Ensure this matches the actual entry point
+            'admt=main:main',
         ],
     },
     author='Liam Olivier',
@@ -29,14 +28,13 @@ setup(
     description='Automated Data Migration Tool',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
-    url='https://github.com/yourusername/admt',
+    url='https://github.com/Lincalibur/Automated-Data-Migration-Tool',
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.12',
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.9',
 )

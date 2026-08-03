@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+venv/
+env/
+.venv/
+
+# Runtime data created by the app
+uploaded_files/
+output_files/
+*.db
+
+# Node (kept out in case a frontend build is reintroduced)
+node_modules/
+build/
+dist/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
