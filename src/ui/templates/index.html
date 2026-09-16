@@ -2,32 +2,73 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Automated Data Migration Tool</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Serif:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <main>
-        <h1>Automated Data Migration Tool</h1>
-        <p class="subtitle">Drag a file in, pick a conversion, get the result.</p>
+    <div class="wrap">
+        <header class="masthead">
+            <div class="masthead-title">
+                <span class="kicker">// data migration utility</span>
+                <h1>ADMT<span class="cursor">_</span></h1>
+            </div>
+            <div class="masthead-meta">
+                <span>status: <b id="status-pill">idle</b></span>
+                <span>handlers loaded: {{ conversions|length }}</span>
+            </div>
+        </header>
 
-        <div id="dropzone" class="dropzone">
-            Drag &amp; drop a file here, or click to choose one
-            <input type="file" id="file-input" hidden>
+        <p class="lede">Drop a file, pick a target format, run the pipeline. Nothing else to it.</p>
+
+        <div class="board">
+            <section class="panel panel-input">
+                <h2 class="panel-title">01 &mdash; source</h2>
+
+                <div id="dropzone" class="dropzone" tabindex="0">
+                    <span class="dropzone-mark">+</span>
+                    <span class="dropzone-text">drag a file here, or click to browse</span>
+                    <input type="file" id="file-input" hidden>
+                </div>
+
+                <div id="uploaded-info" class="uploaded-info" hidden>
+                    <div class="file-chip">
+                        <span class="file-chip-dot"></span>
+                        <span id="uploaded-name" class="file-chip-name"></span>
+                        <button id="clear-btn" class="file-chip-clear" title="remove" type="button">&times;</button>
+                    </div>
+
+                    <h2 class="panel-title">02 &mdash; target format</h2>
+                    <div id="convert-options" class="convert-options">
+                        {% for name in conversions %}
+                        <label class="format-chip">
+                            <input type="radio" name="convert-to" value="{{ name }}" {% if loop.first %}checked{% endif %}>
+                            <span>{{ name.replace('_', ' ') }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+
+                    <button id="convert-btn" type="button">run conversion &rarr;</button>
+                </div>
+            </section>
+
+            <section class="panel panel-log">
+                <h2 class="panel-title">log</h2>
+                <ol id="log-list" class="log-list">
+                    <li class="log-entry log-entry-boot"><span class="log-time">--:--:--</span><span class="log-msg">waiting for input</span></li>
+                </ol>
+            </section>
         </div>
 
-        <div id="uploaded-info" class="uploaded-info" hidden>
-            <p>Uploaded: <span id="uploaded-name"></span></p>
-            <label for="convert-to">Convert to:</label>
-            <select id="convert-to">
-                {% for name in conversions %}
-                <option value="{{ name }}">{{ name.replace('_', ' ') }}</option>
-                {% endfor %}
-            </select>
-            <button id="convert-btn">Convert</button>
-        </div>
-
-        <div id="result" class="result" hidden></div>
-    </main>
+        <footer class="foot">
+            <span>local instance</span>
+            <span>&middot;</span>
+            <span>files never leave this machine</span>
+        </footer>
+    </div>
     <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>
